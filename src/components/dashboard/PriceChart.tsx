@@ -9,18 +9,20 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { PricePoint, formatCurrency } from "@/lib/mockData";
+import { PricePoint, formatCurrency, CoinInfo } from "@/lib/mockData";
 
 interface PriceChartProps {
   historicalData: PricePoint[];
   predictions: PricePoint[];
   showPredictions: boolean;
+  coin: CoinInfo;
 }
 
 export const PriceChart = ({
   historicalData,
   predictions,
   showPredictions,
+  coin,
 }: PriceChartProps) => {
   const chartData = useMemo(() => {
     const historical = historicalData.map((d) => ({
@@ -42,7 +44,6 @@ export const PriceChart = ({
         type: "prediction",
       }));
 
-      // Add last historical point to connect the lines
       const lastHistorical = historical[historical.length - 1];
       return [
         ...historical,
@@ -63,13 +64,13 @@ export const PriceChart = ({
         <div className="glass-card p-3 border border-border/50">
           <p className="text-sm font-medium text-foreground mb-2">{label}</p>
           {price && (
-            <p className="text-sm font-mono text-primary">
-              Price: {formatCurrency(price.value)}
+            <p className="text-sm font-mono" style={{ color: coin.color }}>
+              Price: {formatCurrency(price.value, coin.symbol)}
             </p>
           )}
           {prediction && (
             <p className="text-sm font-mono text-chart-prediction">
-              Predicted: {formatCurrency(prediction.value)}
+              Predicted: {formatCurrency(prediction.value, coin.symbol)}
             </p>
           )}
         </div>
@@ -89,14 +90,19 @@ export const PriceChart = ({
     <div className="glass-card p-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-lg font-semibold text-foreground">BTC/USD Price Chart</h2>
+          <h2 className="text-lg font-semibold text-foreground">
+            {coin.symbol}/USD Price Chart
+          </h2>
           <p className="text-sm text-muted-foreground">
             30-day historical data {showPredictions && "+ 7-day forecast"}
           </p>
         </div>
         <div className="flex items-center gap-4 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-primary" />
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: coin.color }}
+            />
             <span className="text-muted-foreground">Historical</span>
           </div>
           {showPredictions && (
@@ -115,9 +121,9 @@ export const PriceChart = ({
             margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <defs>
-              <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(187, 100%, 42%)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="hsl(187, 100%, 42%)" stopOpacity={0} />
+              <linearGradient id={`colorPrice-${coin.symbol}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={coin.color} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={coin.color} stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorPrediction" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="hsl(270, 91%, 65%)" stopOpacity={0.3} />
@@ -141,7 +147,11 @@ export const PriceChart = ({
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+              tickFormatter={(value) => {
+                if (value >= 1000) return `$${(value / 1000).toFixed(0)}k`;
+                if (value >= 1) return `$${value.toFixed(0)}`;
+                return `$${value.toFixed(2)}`;
+              }}
               domain={["auto", "auto"]}
             />
             <Tooltip content={<CustomTooltip />} />
@@ -161,12 +171,12 @@ export const PriceChart = ({
             <Area
               type="monotone"
               dataKey="price"
-              stroke="hsl(187, 100%, 42%)"
+              stroke={coin.color}
               strokeWidth={2}
               fillOpacity={1}
-              fill="url(#colorPrice)"
+              fill={`url(#colorPrice-${coin.symbol})`}
               dot={false}
-              activeDot={{ r: 6, fill: "hsl(187, 100%, 42%)" }}
+              activeDot={{ r: 6, fill: coin.color }}
             />
             {showPredictions && (
               <Area

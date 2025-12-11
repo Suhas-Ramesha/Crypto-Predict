@@ -9,6 +9,7 @@ interface StatsCardProps {
   icon: LucideIcon;
   subtitle?: string;
   className?: string;
+  coinColor?: string;
 }
 
 export const StatsCard = ({
@@ -19,6 +20,7 @@ export const StatsCard = ({
   icon: Icon,
   subtitle,
   className,
+  coinColor,
 }: StatsCardProps) => {
   return (
     <div
@@ -57,6 +59,7 @@ export const StatsCard = ({
             changeType === "positive" && "bg-success/10 group-hover:bg-success/20",
             changeType === "negative" && "bg-destructive/10 group-hover:bg-destructive/20"
           )}
+          style={coinColor ? { backgroundColor: `${coinColor}20` } : undefined}
         >
           <Icon
             className={cn(
@@ -65,6 +68,7 @@ export const StatsCard = ({
               changeType === "positive" && "text-success",
               changeType === "negative" && "text-destructive"
             )}
+            style={coinColor ? { color: coinColor } : undefined}
           />
         </div>
       </div>
