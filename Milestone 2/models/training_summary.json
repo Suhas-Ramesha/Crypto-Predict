@@ -1,0 +1,87 @@
+{
+  "training_date": "2025-12-04T11:37:41.241577",
+  "method": "Cross-Validation + Hyperparameter Tuning",
+  "cv_folds": 5,
+  "coins": [
+    {
+      "coin": "bitcoin",
+      "symbol": "BTC",
+      "model_type": "Linear",
+      "best_params": {},
+      "cv_r2_score": 0.9998328273392832,
+      "test_r2_score": 0.9997286224902641,
+      "mae": 11267.220175825005,
+      "rmse": 15440.292955108634,
+      "mape": 0.13477600381082547,
+      "train_samples": 34779,
+      "test_samples": 8695,
+      "num_features": 26,
+      "timestamp": "2025-12-04T11:35:52.445004"
+    },
+    {
+      "coin": "ethereum",
+      "symbol": "ETH",
+      "model_type": "Linear",
+      "best_params": {},
+      "cv_r2_score": 0.9997675416483182,
+      "test_r2_score": 0.9998920706560116,
+      "mae": 562.2634881361035,
+      "rmse": 767.3656253547538,
+      "mape": 0.2217588720073162,
+      "train_samples": 34779,
+      "test_samples": 8695,
+      "num_features": 26,
+      "timestamp": "2025-12-04T11:36:26.184182"
+    },
+    {
+      "coin": "binance_coin",
+      "symbol": "BNB",
+      "model_type": "Linear",
+      "best_params": {},
+      "cv_r2_score": 0.9995662923861627,
+      "test_r2_score": 0.9998637702216627,
+      "mae": 108.75617650665347,
+      "rmse": 165.46902368471785,
+      "mape": 0.16594572290303272,
+      "train_samples": 34779,
+      "test_samples": 8695,
+      "num_features": 26,
+      "timestamp": "2025-12-04T11:36:44.884190"
+    },
+    {
+      "coin": "cardano",
+      "symbol": "ADA",
+      "model_type": "Ridge",
+      "best_params": {
+        "alpha": 0.01
+      },
+      "cv_r2_score": 0.9997610675263424,
+      "test_r2_score": 0.999480965633757,
+      "mae": 0.19664497701045058,
+      "rmse": 0.3060471928041674,
+      "mape": 0.3028315929113151,
+      "train_samples": 34779,
+      "test_samples": 8695,
+      "num_features": 26,
+      "timestamp": "2025-12-04T11:37:19.302346"
+    },
+    {
+      "coin": "dogecoin",
+      "symbol": "DOGE",
+      "model_type": "Linear",
+      "best_params": {},
+      "cv_r2_score": 0.9995872806547818,
+      "test_r2_score": 0.9997775619364345,
+      "mae": 0.058804108444964934,
+      "rmse": 0.08659196385651344,
+      "mape": 0.3005761058024908,
+      "train_samples": 34779,
+      "test_samples": 8695,
+      "num_features": 26,
+      "timestamp": "2025-12-04T11:37:41.223586"
+    }
+  ],
+  "average_r2": 0.999748598187626,
+  "average_mae": 2387.699057910643,
+  "target_met": true
+}

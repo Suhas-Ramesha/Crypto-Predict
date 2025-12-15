@@ -1,0 +1,15 @@
+{
+  "coin": "dogecoin",
+  "symbol": "DOGE",
+  "model_type": "Linear",
+  "best_params": {},
+  "cv_r2_score": 0.9995872806547818,
+  "test_r2_score": 0.9997775619364345,
+  "mae": 0.058804108444964934,
+  "rmse": 0.08659196385651344,
+  "mape": 0.3005761058024908,
+  "train_samples": 34779,
+  "test_samples": 8695,
+  "num_features": 26,
+  "timestamp": "2025-12-04T11:37:41.223586"
+}

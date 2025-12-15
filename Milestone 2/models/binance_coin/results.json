@@ -1,0 +1,15 @@
+{
+  "coin": "binance_coin",
+  "symbol": "BNB",
+  "model_type": "Linear",
+  "best_params": {},
+  "cv_r2_score": 0.9995662923861627,
+  "test_r2_score": 0.9998637702216627,
+  "mae": 108.75617650665347,
+  "rmse": 165.46902368471785,
+  "mape": 0.16594572290303272,
+  "train_samples": 34779,
+  "test_samples": 8695,
+  "num_features": 26,
+  "timestamp": "2025-12-04T11:36:44.884190"
+}
