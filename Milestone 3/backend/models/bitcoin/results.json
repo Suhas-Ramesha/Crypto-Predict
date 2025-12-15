@@ -1,0 +1,15 @@
+{
+  "coin": "bitcoin",
+  "symbol": "BTC",
+  "model_type": "Linear",
+  "best_params": {},
+  "cv_r2_score": 0.9998328273392832,
+  "test_r2_score": 0.9997286224902641,
+  "mae": 11267.220175825005,
+  "rmse": 15440.292955108634,
+  "mape": 0.13477600381082547,
+  "train_samples": 34779,
+  "test_samples": 8695,
+  "num_features": 26,
+  "timestamp": "2025-12-04T11:35:52.445004"
+}

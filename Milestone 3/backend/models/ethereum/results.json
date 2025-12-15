@@ -1,0 +1,15 @@
+{
+  "coin": "ethereum",
+  "symbol": "ETH",
+  "model_type": "Linear",
+  "best_params": {},
+  "cv_r2_score": 0.9997675416483182,
+  "test_r2_score": 0.9998920706560116,
+  "mae": 562.2634881361035,
+  "rmse": 767.3656253547538,
+  "mape": 0.2217588720073162,
+  "train_samples": 34779,
+  "test_samples": 8695,
+  "num_features": 26,
+  "timestamp": "2025-12-04T11:36:26.184182"
+}

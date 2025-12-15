@@ -1,0 +1,17 @@
+{
+  "coin": "cardano",
+  "symbol": "ADA",
+  "model_type": "Ridge",
+  "best_params": {
+    "alpha": 0.01
+  },
+  "cv_r2_score": 0.9997610675263424,
+  "test_r2_score": 0.999480965633757,
+  "mae": 0.19664497701045058,
+  "rmse": 0.3060471928041674,
+  "mape": 0.3028315929113151,
+  "train_samples": 34779,
+  "test_samples": 8695,
+  "num_features": 26,
+  "timestamp": "2025-12-04T11:37:19.302346"
+}

@@ -1,0 +1,81 @@
+{
+  "coin": "bitcoin",
+  "total_samples": 43474,
+  "train_samples": 34779,
+  "test_samples": 8695,
+  "num_features": 26,
+  "feature_names": [
+    "volume_lag_1",
+    "volume_lag_6",
+    "volume_lag_12",
+    "volume_lag_24",
+    "volume_lag_48",
+    "return_6h",
+    "return_12h",
+    "return_24h",
+    "momentum_6h",
+    "momentum_12h",
+    "momentum_24h",
+    "roc_24h",
+    "volume_std_6h",
+    "volume_std_12h",
+    "volume_std_24h",
+    "volume_mean_24h",
+    "volume_change_24h",
+    "sma_7",
+    "sma_14",
+    "sma_30",
+    "macd",
+    "bb_width",
+    "rsi_14",
+    "price_range",
+    "atr_14",
+    "vpt"
+  ],
+  "train_split": 0.8,
+  "scaler_info": "Single MinMaxScaler for both features and target",
+  "scaler_shape": "(27,) - includes 26 features + 1 target",
+  "date_range": {
+    "train_start": "2020-12-07T00:00:00.000000000",
+    "train_end": "2024-12-04T11:00:00.000000000",
+    "test_start": "2024-12-04T12:00:00.000000000",
+    "test_end": "2025-12-04T00:00:00.000000000"
+  },
+  "feature_categories": {
+    "price_lags": [
+      "volume_lag_1",
+      "volume_lag_6",
+      "volume_lag_12",
+      "volume_lag_24",
+      "volume_lag_48",
+      "return_6h",
+      "return_12h",
+      "return_24h"
+    ],
+    "volume_lags": [
+      "momentum_6h",
+      "momentum_12h",
+      "momentum_24h",
+      "roc_24h",
+      "volume_std_6h"
+    ],
+    "momentum_returns": [
+      "volume_std_12h",
+      "volume_std_24h",
+      "volume_mean_24h",
+      "volume_change_24h",
+      "sma_7",
+      "sma_14",
+      "sma_30",
+      "macd"
+    ],
+    "volume_volatility": [
+      "bb_width",
+      "rsi_14",
+      "price_range",
+      "atr_14",
+      "vpt"
+    ],
+    "technical_indicators": []
+  }
+}
