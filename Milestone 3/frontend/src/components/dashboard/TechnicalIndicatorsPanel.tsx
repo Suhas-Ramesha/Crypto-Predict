@@ -103,7 +103,7 @@ export const TechnicalIndicatorsPanel = ({ historicalData, coin }: TechnicalIndi
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary transition-colors cursor-help" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="w-[200px] text-xs">Simple & Exponential Moving Averages identify trends and potential support/resistance levels.</p>
+                    <p className="w-[320px] text-xs">Simple & Exponential Moving Averages identify trends and potential support/resistance levels.</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -116,7 +116,7 @@ export const TechnicalIndicatorsPanel = ({ historicalData, coin }: TechnicalIndi
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary transition-colors cursor-help" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="w-[200px] text-xs">Bollinger Bands measure volatility. Price near upper/lower bands may indicate overbought/oversold conditions.</p>
+                    <p className="w-[320px] text-xs">Bollinger Bands measure volatility. Price near upper/lower bands may indicate overbought/oversold conditions.</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -129,7 +129,7 @@ export const TechnicalIndicatorsPanel = ({ historicalData, coin }: TechnicalIndi
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary transition-colors cursor-help" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="w-[200px] text-xs">Relative Strength Index measures momentum. &gt;70 suggests overbought (sell risk), &lt;30 suggests oversold (buy opportunity).</p>
+                    <p className="w-[320px] text-xs">Relative Strength Index measures momentum. &gt;70 suggests overbought (sell risk), &lt;30 suggests oversold (buy opportunity).</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -142,7 +142,7 @@ export const TechnicalIndicatorsPanel = ({ historicalData, coin }: TechnicalIndi
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary transition-colors cursor-help" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="w-[200px] text-xs">Moving Average Convergence Divergence tracks trend changes and momentum strength.</p>
+                    <p className="w-[320px] text-xs">Moving Average Convergence Divergence tracks trend changes and momentum strength.</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
