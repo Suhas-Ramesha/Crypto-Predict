@@ -22,7 +22,12 @@ app = FastAPI(title="CryptoForecast API", version="1.0.0")
 # CORS middleware for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080", "http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:8080",
+        "http://localhost:5173",
+        "https://www.crypto-predict.me",
+        "https://crypto-predict-25lf.onrender.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -72,7 +77,6 @@ class PredictionResponse(BaseModel):
     predictions: List[Dict]
     model_info: Dict
 
-# ========== FEATURE EXTRACTION (must match training) ==========
 # ========== FEATURE EXTRACTION (must match training) ==========
 def extract_features(df):
     """Extract 26 features - must match training process from metadata.json"""

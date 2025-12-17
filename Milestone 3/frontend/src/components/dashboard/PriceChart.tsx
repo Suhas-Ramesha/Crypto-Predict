@@ -1,7 +1,9 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
-  AreaChart,
+  ComposedChart,
   Area,
+  Line,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -9,7 +11,10 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { PricePoint, formatCurrency, CoinInfo } from "@/lib/mockData";
+import { PricePoint, formatCurrency, CoinInfo, formatVolume } from "@/lib/mockData";
+import { Button } from "@/components/ui/button";
+import { Toggle } from "@/components/ui/toggle";
+import { BarChart2, TrendingUp, Activity } from "lucide-react";
 
 interface PriceChartProps {
   historicalData: PricePoint[];
@@ -18,12 +23,17 @@ interface PriceChartProps {
   coin: CoinInfo;
 }
 
+type ChartType = "area" | "line";
+
 export const PriceChart = ({
   historicalData,
   predictions,
   showPredictions,
   coin,
 }: PriceChartProps) => {
+  const [chartType, setChartType] = useState<ChartType>("area");
+  const [showVolume, setShowVolume] = useState(false);
+
   const chartData = useMemo(() => {
     const historical = historicalData.map((d) => ({
       date: new Date(d.timestamp).toLocaleDateString("en-US", {
@@ -31,6 +41,7 @@ export const PriceChart = ({
         day: "numeric",
       }),
       price: d.close,
+      volume: d.volume,
       type: "historical",
     }));
 
@@ -41,6 +52,7 @@ export const PriceChart = ({
           day: "numeric",
         }),
         prediction: d.close,
+        volume: d.volume, // Prediction might not have volume, handle gracefully
         type: "prediction",
       }));
 
@@ -59,6 +71,7 @@ export const PriceChart = ({
     if (active && payload && payload.length) {
       const price = payload.find((p: any) => p.dataKey === "price");
       const prediction = payload.find((p: any) => p.dataKey === "prediction");
+      const volume = payload.find((p: any) => p.dataKey === "volume");
 
       return (
         <div className="glass-card p-3 border border-border/50">
@@ -71,6 +84,11 @@ export const PriceChart = ({
           {prediction && (
             <p className="text-sm font-mono text-chart-prediction">
               Predicted: {formatCurrency(prediction.value, coin.symbol)}
+            </p>
+          )}
+          {volume && (
+            <p className="text-xs text-muted-foreground mt-1">
+              Vol: {formatVolume(volume.value)}
             </p>
           )}
         </div>
@@ -88,7 +106,8 @@ export const PriceChart = ({
 
   return (
     <div className="glass-card p-6 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-      <div className="flex items-center justify-between mb-6">
+      {/* Header Controls */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <h2 className="text-lg font-semibold text-foreground">
             {coin.symbol}/INR Price Chart
@@ -97,26 +116,39 @@ export const PriceChart = ({
             30-day historical data {showPredictions && "+ 7-day forecast"}
           </p>
         </div>
-        <div className="flex items-center gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: coin.color }}
-            />
-            <span className="text-muted-foreground">Historical</span>
-          </div>
-          {showPredictions && (
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-chart-prediction" />
-              <span className="text-muted-foreground">Prediction</span>
-            </div>
-          )}
+
+        <div className="flex items-center gap-2 bg-secondary/30 p-1 rounded-lg">
+          <Button
+            variant={chartType === "area" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setChartType("area")}
+            className="h-8 px-2 text-xs"
+          >
+            <TrendingUp className="h-3 w-3 mr-1" /> Area
+          </Button>
+          <Button
+            variant={chartType === "line" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setChartType("line")}
+            className="h-8 px-2 text-xs"
+          >
+            <Activity className="h-3 w-3 mr-1" /> Line
+          </Button>
+          <div className="w-px h-4 bg-border/50 mx-1" />
+          <Button
+            variant={showVolume ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setShowVolume(!showVolume)}
+            className="h-8 px-2 text-xs"
+          >
+            <BarChart2 className="h-3 w-3 mr-1" /> Vol
+          </Button>
         </div>
       </div>
 
       <div className="h-[400px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
+          <ComposedChart
             data={chartData}
             margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
@@ -142,7 +174,9 @@ export const PriceChart = ({
               tickLine={false}
               axisLine={false}
             />
+            {/* Price Y Axis */}
             <YAxis
+              yAxisId="left"
               stroke="hsl(215, 20%, 65%)"
               fontSize={12}
               tickLine={false}
@@ -155,9 +189,21 @@ export const PriceChart = ({
               }}
               domain={["auto", "auto"]}
             />
+            {/* Volume Y Axis (Hidden or Right aligned) */}
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              stroke="hsl(215, 20%, 65%)"
+              fontSize={0} // Hide ticks
+              tickLine={false}
+              axisLine={false}
+              domain={[0, (dataMax: number) => dataMax * 4]} // Scale volume down
+            />
             <Tooltip content={<CustomTooltip />} />
+
             {showPredictions && lastHistoricalDate && (
               <ReferenceLine
+                yAxisId="left"
                 x={lastHistoricalDate}
                 stroke="hsl(215, 20%, 45%)"
                 strokeDasharray="5 5"
@@ -169,30 +215,72 @@ export const PriceChart = ({
                 }}
               />
             )}
-            <Area
-              type="monotone"
-              dataKey="price"
-              stroke={coin.color}
-              strokeWidth={2}
-              fillOpacity={1}
-              fill={`url(#colorPrice-${coin.symbol})`}
-              dot={false}
-              activeDot={{ r: 6, fill: coin.color }}
-            />
-            {showPredictions && (
-              <Area
-                type="monotone"
-                dataKey="prediction"
-                stroke="hsl(270, 91%, 65%)"
-                strokeWidth={2}
-                strokeDasharray="5 5"
-                fillOpacity={1}
-                fill="url(#colorPrediction)"
-                dot={false}
-                activeDot={{ r: 6, fill: "hsl(270, 91%, 65%)" }}
+
+            {/* Volume Bars */}
+            {showVolume && (
+              <Bar
+                yAxisId="right"
+                dataKey="volume"
+                fill="hsl(215, 20%, 35%)"
+                opacity={0.3}
+                barSize={10}
               />
             )}
-          </AreaChart>
+
+            {/* Historical Price */}
+            {chartType === "area" ? (
+              <Area
+                yAxisId="left"
+                type="monotone"
+                dataKey="price"
+                stroke={coin.color}
+                strokeWidth={2}
+                fillOpacity={1}
+                fill={`url(#colorPrice-${coin.symbol})`}
+                dot={false}
+                activeDot={{ r: 6, fill: coin.color }}
+              />
+            ) : (
+              <Line
+                yAxisId="left"
+                type="monotone"
+                dataKey="price"
+                stroke={coin.color}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 6, fill: coin.color }}
+              />
+            )}
+
+            {/* Prediction Price */}
+            {showPredictions && (
+              chartType === "area" ? (
+                <Area
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="prediction"
+                  stroke="hsl(270, 91%, 65%)"
+                  strokeWidth={2}
+                  strokeDasharray="5 5"
+                  fillOpacity={1}
+                  fill="url(#colorPrediction)"
+                  dot={false}
+                  activeDot={{ r: 6, fill: "hsl(270, 91%, 65%)" }}
+                />
+              ) : (
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="prediction"
+                  stroke="hsl(270, 91%, 65%)"
+                  strokeWidth={2}
+                  strokeDasharray="5 5"
+                  dot={false}
+                  activeDot={{ r: 6, fill: "hsl(270, 91%, 65%)" }}
+                />
+              )
+            )}
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
     </div>
