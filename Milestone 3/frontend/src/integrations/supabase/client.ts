@@ -5,13 +5,73 @@ import type { Database } from './types';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+// Validate environment variables
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  console.error('Missing Supabase environment variables. Please check your .env file.');
+}
+
+// Track failed requests to prevent console spam
+let lastErrorTime = 0;
+let errorCount = 0;
+const ERROR_THROTTLE_MS = 5000; // Only log errors every 5 seconds
+const MAX_ERRORS_BEFORE_SILENCE = 10;
+
+// Custom fetch wrapper to handle network errors gracefully
+const customFetch = async (url: string | Request, options?: RequestInit): Promise<Response> => {
+  try {
+    const response = await fetch(url, options);
+    // Reset error count on successful request
+    if (response.ok) {
+      errorCount = 0;
+      lastErrorTime = 0;
+    }
+    return response;
+  } catch (error: any) {
+    errorCount++;
+    const now = Date.now();
+    
+    // Only log errors if enough time has passed or if it's one of the first few errors
+    const shouldLog = 
+      (now - lastErrorTime > ERROR_THROTTLE_MS || errorCount <= 3) &&
+      errorCount <= MAX_ERRORS_BEFORE_SILENCE;
+    
+    if (shouldLog) {
+      const errorMessage = 
+        error?.message?.includes('ERR_NAME_NOT_RESOLVED') ||
+        error?.message?.includes('Failed to fetch')
+          ? 'Unable to reach Supabase server. Please check your network connection and Supabase URL configuration.'
+          : 'Network error occurred while connecting to Supabase.';
+      
+      if (errorCount <= 3) {
+        console.warn(`Supabase connection error: ${errorMessage}`);
+      } else if (errorCount === MAX_ERRORS_BEFORE_SILENCE) {
+        console.warn('Supabase connection errors suppressed. Please check your network connection and Supabase configuration.');
+      }
+      
+      lastErrorTime = now;
+    }
+    
+    // Still reject the promise so the calling code can handle it
+    throw error;
+  }
+};
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    storage: localStorage,
-    persistSession: true,
-    autoRefreshToken: true,
+export const supabase = createClient<Database>(
+  SUPABASE_URL || 'https://placeholder.supabase.co',
+  SUPABASE_PUBLISHABLE_KEY || 'placeholder-key',
+  {
+    auth: {
+      storage: localStorage,
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      flowType: 'pkce',
+    },
+    global: {
+      fetch: customFetch,
+    },
   }
-});
+);
