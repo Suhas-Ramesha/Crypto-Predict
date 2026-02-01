@@ -20,14 +20,18 @@ __main__.MinMaxScaler = MinMaxScaler
 app = FastAPI(title="CryptoForecast API", version="1.0.0")
 
 # CORS middleware for frontend
+cors_origins = [
+    "http://localhost:8080",
+    "http://localhost:5173",
+    "https://www.crypto-predict.me",
+    "https://crypto-predict-25lf.onrender.com",
+    # Add your Fly.io domain here after deployment (e.g., "https://crypto-predict-api.fly.dev")
+    # Add your Vercel frontend domain here (e.g., "https://your-app.vercel.app")
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:8080",
-        "http://localhost:5173",
-        "https://www.crypto-predict.me",
-        "https://crypto-predict-25lf.onrender.com"
-    ],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -334,4 +338,6 @@ async def make_prediction(coin: str, request: PredictionRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Use PORT environment variable (Railway, Render, etc.) or default to 8000
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
